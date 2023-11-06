@@ -1,0 +1,30 @@
+[versions]
+# libraries
+okhttp = "4.12.0"
+kotlinxSerializationJson = "1.6.0"
+kotlinxCoroutines = "1.7.3"
+ktor = "2.3.5"
+
+# plugins
+kotlin = "1.9.0"
+changelog = "2.2.0"
+gradleIntelliJPlugin = "1.16.0"
+gradleGrammarKit = "2022.3.2"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+gradleGrammarKit = { id = "org.jetbrains.grammarkit", version.ref = "gradleGrammarKit" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[libraries]
+okhttp = { name = "okhttp", group = "com.squareup.okhttp3", version.ref = "okhttp" }
+okhttpLoggingInterceptor = { name = "logging-interceptor", group = "com.squareup.okhttp3", version.ref = "okhttp" }
+kotlinSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+ktorClientCore = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktorClientJava = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
+ktorClientContentNegotitation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktorKotlinxJson = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktorClientLogging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }

@@ -1,0 +1,15 @@
+#lc-home > *:not(#lc-content) {
+    display: none;
+}
+
+body {
+    background: var(--idea-bg);
+}
+
+#lc-home > *:not(#lc-content) {
+    display: none;
+}
+
+#initial-loading {
+    background: var(--idea-bg) !important;
+}

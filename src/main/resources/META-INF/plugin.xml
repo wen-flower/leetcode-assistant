@@ -1,0 +1,80 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<!--suppress PluginXmlCapitalization -->
+<idea-plugin require-restart="false">
+    <name>LeetCode Assistant</name>
+    <vendor url="https://github.com/wen-flower">Wen Flower</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="java.xml">com.intellij.java</depends>
+
+    <resource-bundle>messages.MyBundle</resource-bundle>
+
+    <applicationListeners>
+        <!--        <listener class="icu.twtool.leetcode.listeners.MyDynamicPluginListener"-->
+        <!--                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>-->
+        <!--        <listener class="icu.twtool.leetcode.listeners.MyApplicationActivationListener"-->
+        <!--                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>-->
+    </applicationListeners>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Notification -->
+        <notificationGroup displayType="BALLOON" id="LEETCODE-ASSISTANT-NOTIFICATION"/>
+
+        <!-- Language -->
+
+        <!-- State -->
+        <!-- UI -->
+        <toolWindow id="LeetCode.ToolWindow" icon="LeetCodeIcons.LeetCode"
+                    factoryClass="icu.twtool.leetcode.ui.window.LeetCodeToolWindowFactory"/>
+
+        <!-- Registry -->
+        <registryKey defaultValue="false" description="LeetCode Debug" key="leetcode.debug"/>
+    </extensions>
+
+    <actions resource-bundle="messages.ActionBundle">
+        <!-- Actions -->
+        <action id="LeetCode.Action.Login" icon="LeetCodeIcons.Login"
+                class="icu.twtool.leetcode.actions.LoginAction"/>
+        <action id="LeetCode.Action.Logout" icon="LeetCodeIcons.Logout"
+                class="icu.twtool.leetcode.actions.LogoutAction"/>
+
+        <action id="LeetCode.Action.Question.List.Refresh.Action" icon="AllIcons.Actions.Refresh"
+                class="icu.twtool.leetcode.actions.LoadRefreshPageAction"/>
+        <action id="LeetCode.Action.Question.List.Previous.Action" icon="AllIcons.General.ArrowLeft"
+                class="icu.twtool.leetcode.actions.LoadPreviousPageAction"/>
+        <action id="LeetCode.Action.Question.List.Input.Page.Action"
+                class="icu.twtool.leetcode.actions.InputPageAction"/>
+        <action id="LeetCode.Action.Question.List.Next.Action" icon="AllIcons.General.ArrowRight"
+                class="icu.twtool.leetcode.actions.LoadNextPageAction"/>
+        <action id="LeetCode.Action.Question.List.Filter" icon="AllIcons.General.Filter"
+                class="icu.twtool.leetcode.actions.FilterAction"/>
+        <action id="LeetCode.Action.Question.List.Search" icon="AllIcons.Actions.Search"
+                class="icu.twtool.leetcode.actions.SearchAction">
+            <keyboard-shortcut first-keystroke="ctrl F" keymap="$default"/>
+        </action>
+
+        <!-- ToolsMenu Group -->
+        <group id="LeetCode.Tools.Menu.Group" popup="true" icon="LeetCodeIcons.LeetCode"
+               class="icu.twtool.leetcode.actions.groups.LeetCodeActionGroup">
+            <reference ref="LeetCode.Action.Login"/>
+            <reference ref="LeetCode.Action.Logout"/>
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </group>
+
+        <group id="LeetCode.ToolWindow.Header.Group.Action">
+            <reference ref="LeetCode.Action.Login"/>
+            <reference ref="LeetCode.Action.Logout"/>
+        </group>
+
+        <group id="LeetCode.ToolWindow.Group.Action">
+            <reference ref="LeetCode.Action.Question.List.Search"/>
+            <separator/>
+            <reference ref="LeetCode.Action.Question.List.Refresh.Action"/>
+            <reference ref="LeetCode.Action.Question.List.Previous.Action"/>
+            <reference ref="LeetCode.Action.Question.List.Input.Page.Action"/>
+            <reference ref="LeetCode.Action.Question.List.Next.Action"/>
+            <separator/>
+            <reference ref="LeetCode.Action.Question.List.Filter"/>
+        </group>
+    </actions>
+</idea-plugin>

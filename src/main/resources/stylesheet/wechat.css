@@ -1,0 +1,7 @@
+#tpl_for_page, body, .web_qrcode_type_page_self {
+    background: var(--idea-bg);
+}
+
+.web_qrcode_wrp {
+    color: var(--idea-fg);
+}
