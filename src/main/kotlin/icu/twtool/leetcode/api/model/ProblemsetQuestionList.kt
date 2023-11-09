@@ -16,7 +16,7 @@ data class ProblemsetQuestionList(
     val hasMore: Boolean = false,
     val questions: List<Question> = emptyList(),
     val total: Int = 0
-) {
+) : java.io.Serializable{
 
     @Serializable
     data class Question(
@@ -31,7 +31,7 @@ data class ProblemsetQuestionList(
         val title: String,
         val titleCn: String,
         val titleSlug: String
-    )
+    ): java.io.Serializable
 }
 
 suspend fun LeetCodeApi.getProblemsetQuestionList(

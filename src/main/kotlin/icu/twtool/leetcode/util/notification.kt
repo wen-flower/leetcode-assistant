@@ -13,12 +13,10 @@ private val notification: NotificationGroup
 
 fun infoNotify(project: Project?, content: String) {
     notification.createNotification(content, NotificationType.INFORMATION)
-        .setIcon(LeetCodeIcons.LeetCode)
         .notify(project)
 }
 
 fun errorNotify(project: Project?, content: String) {
     notification.createNotification(content, NotificationType.ERROR)
-        .setIcon(LeetCodeIcons.LeetCode)
         .notify(project)
 }

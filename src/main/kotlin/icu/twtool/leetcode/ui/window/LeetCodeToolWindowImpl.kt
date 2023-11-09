@@ -4,15 +4,20 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTextField
+import com.intellij.util.io.write
 import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.ui.components.BorderLayoutPanel
 import icu.twtool.leetcode.MyBundle
 import icu.twtool.leetcode.constants.PluginConstants
+import icu.twtool.leetcode.editor.LeetCodeFileType
+import icu.twtool.leetcode.editor.initData
 import icu.twtool.leetcode.listeners.notifier.QuestionListUpdateNotifier
 import icu.twtool.leetcode.listeners.notifier.ToggleActionStateChangeNotifier
 import icu.twtool.leetcode.listeners.notifier.UserStatusChangeNotifier
@@ -22,6 +27,7 @@ import icu.twtool.leetcode.ui.component.QuestionListComponent
 import icu.twtool.leetcode.ui.component.UserInfoAndQuestionInfoPanel
 import icu.twtool.leetcode.util.createCoroutinesScope
 import icu.twtool.leetcode.util.messageBusConnect
+import icu.twtool.leetcode.util.pluginRootPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -29,8 +35,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import java.awt.BorderLayout
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createFile
+import kotlin.io.path.exists
 
 class LeetCodeToolWindowImpl(
     private val project: Project,
@@ -81,7 +92,40 @@ class LeetCodeToolWindowImpl(
     }
 
     private val userInfoAndQuestionInfoPanel: UserInfoAndQuestionInfoPanel
-    private val questionList = QuestionListComponent(questionListService.dataModel)
+
+    private val mouseAdapter: MouseAdapter = object : MouseAdapter() {
+
+        override fun mouseClicked(e: MouseEvent?) {
+            if (e?.clickCount != 2) return
+            val index = questionList.locationToIndex(e.point)
+            val model = questionListService.dataModel
+
+            if (index < 0 || index >= model.size) return
+
+            val question = model.getElementAt(index)
+            val id = question.frontendQuestionId
+            val titleSlug = question.titleSlug
+            val titleCn = question.titleCn
+            val extensions = LeetCodeFileType.INSTANCE.defaultExtension
+
+            val path = pluginRootPath.resolve("${id}.${titleSlug}/${titleCn}.${extensions}").run {
+                if (exists()) this
+                else {
+                    parent.createDirectories()
+                    val new = createFile()
+                    new.initData(question)
+                    new
+                }
+            }
+
+            log.info("path = $path")
+
+            val vf = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path) ?: return
+
+            FileEditorManager.getInstance(project).openFile(vf, true, true)
+        }
+    }
+    private val questionList = QuestionListComponent(mouseAdapter, questionListService.dataModel)
 
     init {
         name = "LeetCode Tool Window"
@@ -140,5 +184,6 @@ class LeetCodeToolWindowImpl(
         log.info("dispose...")
         messageBusConnect.dispose()
         scope.cancel()
+        questionList.dispose()
     }
 }

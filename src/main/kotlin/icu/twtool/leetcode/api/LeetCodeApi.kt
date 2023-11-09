@@ -13,9 +13,13 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.html.P
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import kotlinx.serialization.modules.SerializersModule
@@ -68,12 +72,45 @@ class LeetCodeApi(cookiesStorage: CookiesStorage) : Disposable {
         }
     }
 
+    val mutex = Mutex()
+
+    suspend inline fun <reified T> get(path: String): T? = mutex.withLock {
+        val response = client.get {
+            defaultUrl(path)
+            defaultHeaders()
+        }
+
+        try {
+            return if (response.status == HttpStatusCode.OK) response.body<T>()
+            else null
+        } catch (e: Exception) {
+            thisLogger().error(e)
+            return null
+        }
+    }
+
+    suspend inline fun <reified T, reified P> post(path: String, param: P, noinline headers: HeadersBuilder.() -> Unit = {}): T? = mutex.withLock {
+        val response = client.post {
+            defaultUrl(path)
+            defaultHeaders(headers)
+            setJsonBody(param)
+        }
+
+        try {
+            return if (response.status == HttpStatusCode.OK) response.body<T>()
+            else null
+        } catch (e: Exception) {
+            thisLogger().error(e)
+            return null
+        }
+    }
+
     suspend inline fun <reified T> graphql(
         operationName: String,
         query: String,
         path: String = "graphql",
         crossinline variables: JsonObjectBuilder.() -> Unit = {}
-    ): T? {
+    ): T? = mutex.withLock {
         val response = client.post {
             defaultUrl(path)
             defaultHeaders()

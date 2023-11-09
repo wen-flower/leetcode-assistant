@@ -22,7 +22,7 @@ data class UserStatus(
     val isSuperuser: Boolean,
     val isPhoneVerified: Boolean,
     val isVerified: Boolean,
-)
+) : java.io.Serializable
 
 suspend fun LeetCodeApi.getUserStatus(): UserStatus? {
     var obj = graphql<JsonObject>(

@@ -20,7 +20,13 @@
         <!-- Notification -->
         <notificationGroup displayType="BALLOON" id="LEETCODE-ASSISTANT-NOTIFICATION"/>
 
-        <!-- Language -->
+        <!-- File -->
+        <fileType name="LeetCode File" fieldName="INSTANCE" extensions="lc"
+                  implementationClass="icu.twtool.leetcode.editor.LeetCodeFileType"/>
+        <fileEditorProvider id="LeetCode.Editor.Provider"
+                            implementation="icu.twtool.leetcode.editor.LeetCodeEditorProvider"/>
+        <editorTabTitleProvider id="LeetCode.Editor.Tab.Title.Provider"
+                                implementation="icu.twtool.leetcode.editor.LeetCodeEditorTabTitleProvider"/>
 
         <!-- State -->
         <!-- UI -->
@@ -52,6 +58,10 @@
                 class="icu.twtool.leetcode.actions.SearchAction">
             <keyboard-shortcut first-keystroke="ctrl F" keymap="$default"/>
         </action>
+        <action id="LeetCode.Action.Run" icon="AllIcons.Actions.RunAll"
+                class="icu.twtool.leetcode.actions.RunAction"/>
+        <action id="LeetCode.Action.Submit" icon="AllIcons.RunConfigurations.Remote"
+                class="icu.twtool.leetcode.actions.SubmitAction"/>
 
         <!-- ToolsMenu Group -->
         <group id="LeetCode.Tools.Menu.Group" popup="true" icon="LeetCodeIcons.LeetCode"
@@ -75,6 +85,11 @@
             <reference ref="LeetCode.Action.Question.List.Next.Action"/>
             <separator/>
             <reference ref="LeetCode.Action.Question.List.Filter"/>
+        </group>
+
+        <group id="LeetCode.Editor.Group.Action">
+            <reference ref="LeetCode.Action.Run"/>
+            <reference ref="LeetCode.Action.Submit"/>
         </group>
     </actions>
 </idea-plugin>

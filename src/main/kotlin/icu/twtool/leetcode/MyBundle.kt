@@ -18,4 +18,6 @@ object MyBundle: DynamicBundle(BUNDLE) {
     fun getDevToolButtonText(): String = message("button.dev.tools")
     fun getLoggedButtonText(): String = message("button.logged")
     fun getBackButtonText(): String = message("button.back")
+
+    fun getDeleteButtonText(): String = message("button.delete")
 }

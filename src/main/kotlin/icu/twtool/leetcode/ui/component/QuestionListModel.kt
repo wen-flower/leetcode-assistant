@@ -15,5 +15,5 @@ class QuestionListModel(private var items: List<Question> = emptyList()) : Abstr
 
     override fun getSize(): Int = items.size
 
-    override fun getElementAt(index: Int): Question? = items.getOrNull(index)
+    override fun getElementAt(index: Int): Question = items[index]
 }

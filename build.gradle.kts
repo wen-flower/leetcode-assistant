@@ -105,6 +105,8 @@ tasks {
     }
 }
 
+sourceSets["main"].java.srcDirs("src/main/kotlin")
+
 kotlin {
     jvmToolchain(17)
 }
